@@ -1,12 +1,12 @@
 include:
-  - board: seeeduino_xiao_ble
+  - board: xiao_ble//zmk
     shield: totem_left
-  - board: seeeduino_xiao_ble
+  - board: xiao_ble//zmk
     shield: totem_right
   # - board: seeeduino_xiao_ble
   #   shield: totem_dongle
-  - board: seeeduino_xiao_ble
+  - board: xiao_ble//zmk
     shield: settings_reset
-  - board: seeeduino_xiao_ble
+  - board: xiao_ble//zmk
     shield: totem_dongle
     snippet: zmk-usb-logging
