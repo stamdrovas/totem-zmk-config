@@ -1,12 +1,11 @@
 file_format: "1"
 id: totem
-name: TOTEM
+name: TOTEM Plus 1
 type: shield
-url: https://github.com/GEIGEIGEIST/TOTEM
-requires: [seeeduino_xiao_ble]
+url: https://github.com/karuetech/TOTEM-Plus-1
+requires: [seeed_xiao]
 features:
   - keys
 siblings:
   - totem_left
   - totem_right
-  - totem_dongle
