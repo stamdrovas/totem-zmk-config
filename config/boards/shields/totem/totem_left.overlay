@@ -7,14 +7,12 @@
 #include "totem.dtsi"
 
 &kscan0 {
-    // HARDWARE WORKAROUND: D1 on this controller is dead -- the `r1` joint was
-    // reflowed and the row stayed dead, and bridging the r1/c0 pads directly
-    // produced nothing, so the fault is inside the module, not on the PCB.
-    // Row 1 is bodged to D6 (the `tx` pad) with a wire from the `r1` pad.
-    // D7 was not used because the left layer-toggle slider is wired to it.
+    // Stock wiring. The original controller's D1 was dead and row 1 ran on
+    // D6 via a bodge wire; that module was replaced, so row 1 is back on D1
+    // and the two halves are identical again. See git history for the bodge.
     row-gpios
         = <&xiao_d 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-        , <&xiao_d 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // was D1
+        , <&xiao_d 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
         , <&xiao_d 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
         , <&xiao_d 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
         ;
