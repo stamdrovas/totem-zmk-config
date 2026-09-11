@@ -2,6 +2,10 @@
 // One layer, 40 positions, every one a plain &kp. No hold-taps, no home-row
 // mods, no layer keys, no mouse. One physical key must produce exactly one
 // character.
+//
+// MARCADOR DE VERSAO: a tecla do canto superior DIREITO digita ','
+// em vez de 'p'. Serve para confirmar, depois de gravar, que este build
+// eh o que esta rodando.
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
@@ -14,7 +18,7 @@
             label = "Flat";
             bindings = <
 //        1      2      3      4      5         6      7      8      9      10
-          &kp Q  &kp W  &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I  &kp O  &kp P
+          &kp Q  &kp W  &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I  &kp O  &kp COMMA
 // 11     12     13     14     15     16        17     18     19     20     21        22
    &kp N1 &kp A  &kp S  &kp D  &kp F  &kp G     &kp H  &kp J  &kp K  &kp L  &kp SEMI  &kp N2
 // 23     24     25     26     27     28        29     30     31     32     33        34
