@@ -174,7 +174,7 @@
 // 22     23           24             25            26              27             28          29             30           31            32            33
    &kp ESC &hml LALT Q &hml LCTRL C   &hml LGUI L   &hmli LSHFT D   &kp V          &kp GRAVE   &hmri RSHFT U  &hmr RGUI O  &hmr RCTRL Y  &hmr RALT K   &kp RET
 //                                    34            35              36             37          38             39
-                                      &lt NAV SPACE &mo NUM         &mo NUM        &mo SYM     &mo SYM        &lt NAV SPACE
+                                      &mo NUM       &mo NUM         &lt NAV SPACE  &lt NAV SPACE &mo SYM      &mo SYM
             >;
         };
 
@@ -184,7 +184,7 @@
           &trans       &trans         &kp RA(DEL)   &kp RA(BSPC)    &trans         &trans      &kp RA(LEFT)   &kp UP       &kp RA(RIGHT) &trans
    &trans &trans       &kp LS(TAB)    &kp DEL       &kp BSPC        &trans         &kp LG(LEFT) &kp LEFT      &kp DOWN     &kp RIGHT     &kp LG(RIGHT) &trans
    &trans &trans       &trans         &trans        &trans          &trans         &trans      &kp PG_UP      &kp PG_DN    &trans        &trans        &trans
-                                      &trans        &kp LALT        &kp LGUI       &kp RGUI    &kp RALT       &trans
+                                      &kp LGUI      &kp LALT        &trans         &trans      &kp RALT       &kp RGUI
             >;
         };
 
