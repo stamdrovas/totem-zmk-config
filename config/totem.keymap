@@ -1,322 +1,220 @@
-//
-//                                                        ▀▀▀▀▀     ▀▀▀▀▀          ▀▀█▀▀
-//                                                        ▄▀▀▀▄  ▄  ▄▀▀▀▄  ▄  ▄▀▀▀▄  █  ▄▀▀▀▄
-//                                                        █   █  █  █   █  █  █   █  █  █   █
-//                                                         ▀▀▀   █   ▀▀▀   █   ▀▀▀   ▀   ▀▀▀
-//                                                               █      ▄▄▄█▄▄▄    █   █
-//                                                               ▀      █  █  █     █▄█
-//                                                             ▀▀▀▀▀    █  █  █      ▀
-//                                                                      ▀  ▀  ▀
-//
-// ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+/*
+ * TOTEM Plus 1 -- 40 keys, dongleless split.
+ *
+ * Port of ~/.conf/.config/kanata/kanata.kbd
+ * Host layout assumed: macOS with the Brazilian ABNT2 keyboard layout.
+ * Every keycode below is the US-position HID code that ABNT2 remaps, exactly
+ * like kanata does it (e.g. SEMI -> c-cedilla, SQT -> dead tilde, LBKT -> dead acute).
+ *
+ * PHYSICAL POSITION NUMBERS (used by combos and the bilateral mods)
+ *
+ *          0   1   2   3   4        5   6   7   8   9
+ *     10  11  12  13  14  15       16  17  18  19  20  21
+ *     22  23  24  25  26  27       28  29  30  31  32  33
+ *                 34  35  36       37  38  39
+ */
 
-#include <dt-bindings/zmk/mouse.h>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/pointing.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
 
-#define Base        0
-#define Media       1
-#define Nav         2
-#define NumSym      3
-#define Game        4
-#define Gameplus    5
-#define Accent      6
+#define BASE 0
+#define NAV  1
+#define NUM  2
+#define SYM  3
+#define FN   4
 
-&mt {
-    quick-tap-ms = <100>;
-    global-quick-tap;
-    flavor = "tap-preferred";
-    tapping-term-ms = <170>;
-};
+/* Hand assignment -- the ZMK equivalent of kanata's (defhands ...).
+ * A bottom-row mod only commits to "hold" if the key it would modify is on
+ * the other hand, so same-hand rolls can never misfire.  Thumbs count as
+ * "either hand" so mod + thumb still works. */
+#define KEYS_L  0  1  2  3  4 10 11 12 13 14 15 22 23 24 25 26 27
+#define KEYS_R  5  6  7  8  9 16 17 18 19 20 21 28 29 30 31 32 33
+#define THUMBS 34 35 36 37 38 39
 
+/* kanata: (tap-hold $tt $ht spc (layer-while-held navigation))
+ * balanced + require-prior-idle is the ZMK idiom: inside a typing burst the
+ * thumb is always a plain space; after a short pause, holding it is the layer. */
 &lt {
-    tapping-term-ms = <240>;
     flavor = "balanced";
-    quick-tap-ms = <150>;
+    tapping-term-ms = <200>;
+    quick-tap-ms = <175>;
+    require-prior-idle-ms = <125>;
 };
 
 / {
     behaviors {
-        hm: homerow_mods {
+        /* kanata: (tap-hold-opposite-hand-release $ht <tap> <mod>
+         *          (same-hand tap) (timeout hold) (require-prior-idle 0)) */
+        hml: hold_mod_left {
             compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_MODS";
             #binding-cells = <2>;
             flavor = "balanced";
-            tapping-term-ms = <150>;
-            global-quick-tap;
+            tapping-term-ms = <200>;          /* $ht / $pink_ht */
+            quick-tap-ms = <175>;
+            hold-trigger-key-positions = <KEYS_R THUMBS>;
+            hold-trigger-on-release;
             bindings = <&kp>, <&kp>;
         };
 
-        fsu: flip_shift_underscore {
-            compatible = "zmk,behavior-mod-morph";
-            label = "FLIP_SHIFT_UNDERSCORE";
-            bindings = <&kp UNDER>, <&kp MINUS>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
-
-        f1s: f1or11 {
-            compatible = "zmk,behavior-mod-morph";
-            label = "F1OR11";
-            bindings = <&kp F1>, <&kp F11>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
-
-        f2s: f2_or_f12 {
-            compatible = "zmk,behavior-mod-morph";
-            label = "F2_OR_F12";
-            bindings = <&kp F2>, <&kp F12>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
-
-        sqns: single_quote_no_shift {
-            compatible = "zmk,behavior-mod-morph";
-            label = "SINGLE_QUOTE_NO_SHIFT";
-            bindings = <&kp SQT>, <&kp SQT>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
-
-        dqns: double_quote_no_shift {
-            compatible = "zmk,behavior-mod-morph";
-            label = "DOUBLE_QUOTE_NO_SHIFT";
-            bindings = <&kp DQT>, <&kp DQT>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
-
-        eqns: equal_no_shift {
-            compatible = "zmk,behavior-mod-morph";
-            label = "EQUAL_NO_SHIFT";
-            bindings = <&kp EQUAL>, <&kp EQUAL>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
-
-        df: double_function {
+        hmr: hold_mod_right {
             compatible = "zmk,behavior-hold-tap";
-            label = "DOUBLE_FUNCTION";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <175>;
+            hold-trigger-key-positions = <KEYS_L THUMBS>;
+            hold-trigger-on-release;
             bindings = <&kp>, <&kp>;
-
-            #binding-cells = <2>;
-            tapping-term-ms = <150>;
         };
 
-        hmaccs: homerow_mods_accent_single {
+        /* The two index fingers carry Shift and get the longer $index_ht. */
+        hmli: hold_mod_left_index {
             compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_MODS_ACCENT_SINGLE";
             #binding-cells = <2>;
             flavor = "balanced";
-            tapping-term-ms = <150>;
-            global-quick-tap;
-            bindings = <&kp>, <&accs>;
+            tapping-term-ms = <250>;          /* $index_ht */
+            quick-tap-ms = <175>;
+            hold-trigger-key-positions = <KEYS_R THUMBS>;
+            hold-trigger-on-release;
+            bindings = <&kp>, <&kp>;
         };
 
-        hmaccd: homerow_mods_accent_double {
+        hmri: hold_mod_right_index {
             compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_MODS_ACCENT_DOUBLE";
             #binding-cells = <2>;
             flavor = "balanced";
-            tapping-term-ms = <150>;
-            global-quick-tap;
-            bindings = <&kp>, <&accd>;
-        };
-    };
-
-    combos {
-        compatible = "zmk,combos";
-
-        combo_capsword {
-            bindings = <&caps_word>;
-            key-positions = <11 20>;
-            timeout-ms = <30>;
-            require-prior-idle-ms = <50>;
-            layers = <0>;
+            tapping-term-ms = <250>;
+            quick-tap-ms = <175>;
+            hold-trigger-key-positions = <KEYS_L THUMBS>;
+            hold-trigger-on-release;
+            bindings = <&kp>, <&kp>;
         };
 
-        gamemode {
-            bindings = <&tog 4>;
-            key-positions = <11 12 13 14>;
-            layers = <2 4 5>;
-            require-prior-idle-ms = <100>;
+        /* kanata (defoverrides): Shift+, -> ;   and   Shift+. -> :
+         * On ABNT2 the bare US-slash keycode is ";" and Shift+slash is ":".
+         * mod-morph masks the physical Shift, so the bare code really is bare. */
+        cms: comma_semicolon {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp COMMA>, <&kp SLASH>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        dtc: dot_colon {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp DOT>, <&kp LS(SLASH)>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
         };
     };
 
     macros {
-        cps: copy_shot {
+        /* kanata: ~ (macro ' spc) -- dead tilde plus a space gives the glyph. */
+        tildelit: tilde_literal {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LG(R) &kp C>;
-            label = "COPY_SHOT";
+            wait-ms = <10>;
+            tap-ms = <10>;
+            bindings = <&kp SQT &kp SPACE>;
         };
 
-        fsh: full_screen_shot {
+        /* kanata: (x c v) (macro @diaccedil 10 @diactilde) -- the "cao" chord. */
+        ctil: cedilla_then_tilde {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LG(R) &kp F>;
-            label = "FULL_SCREEN_SHOT";
+            wait-ms = <10>;
+            tap-ms = <10>;
+            bindings = <&kp SEMI &kp SQT>;
         };
+    };
 
-        acc: accent {
-            compatible = "zmk,behavior-macro-two-param";
-            #binding-cells = <2>;
-            bindings =
-                <&macro_press>,
-                <&kp RALT &macro_param_1to1>,
-                <&macro_tap>,
-                <&kp MACRO_PLACEHOLDER &macro_param_2to1>,
-                <&macro_tap>,
-                <&kp MACRO_PLACEHOLDER>,
-                <&macro_release>,
-                <&kp RALT>;
+    /* kanata: @sft (numbers) + @sym (symbols) held together -> the Fn layer. */
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        tri_fn {
+            if-layers = <NUM SYM>;
+            then-layer = <FN>;
         };
+    };
 
-        accs: accent_single_quote {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&kp RALT>,
-                <&macro_tap>,
-                <&sqns &macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_release>,
-                <&kp RALT>;
+    /* kanata (defchordsv2 ...), $chto = 50 ms.
+     * Restricted to the base layer so they cannot fire over numbers/symbols. */
+    combos {
+        compatible = "zmk,combos";
 
-            label = "ACCENT_SINGLE_QUOTE";
-        };
+        /* --- top row: dead accents --- */
+        combo_acute  { key-positions = <2 3>;      bindings = <&kp LBKT>;     timeout-ms = <50>; layers = <BASE>; };
+        combo_circ   { key-positions = <1 2>;      bindings = <&kp LS(SQT)>;  timeout-ms = <50>; layers = <BASE>; };
+        combo_grave  { key-positions = <1 2 3>;    bindings = <&kp LS(LBKT)>; timeout-ms = <50>; layers = <BASE>; };
 
-        accd: accent_double_quote {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&kp RALT>,
-                <&macro_tap>,
-                <&dqns &macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_release>,
-                <&kp RALT>;
+        /* --- bottom row: dead accents (these sit on top of the mods) --- */
+        combo_diaer  { key-positions = <23 24>;    bindings = <&kp LS(N6)>;   timeout-ms = <50>; layers = <BASE>; };
+        combo_cedil  { key-positions = <24 25>;    bindings = <&kp SEMI>;     timeout-ms = <50>; layers = <BASE>; };
+        combo_tilde  { key-positions = <25 26>;    bindings = <&kp SQT>;      timeout-ms = <50>; layers = <BASE>; };
+        combo_ctil   { key-positions = <24 25 26>; bindings = <&ctil>;        timeout-ms = <50>; layers = <BASE>; };
 
-            label = "ACCENT_DOUBLE_QUOTE";
-        };
-
-        acce: accent_equal {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings =
-                <&macro_press>,
-                <&kp RALT>,
-                <&macro_tap>,
-                <&eqns &macro_param_1to1 &kp MACRO_PLACEHOLDER>,
-                <&macro_release>,
-                <&kp RALT>;
-
-            label = "ACCENT_EQUAL";
-        };
-
-        game_type: game_type {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp ENTER &to 7>;
-            label = "GAME_TYPE";
-        };
-
-        game_type_exit: game_type_exit {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &to 4>;
-            label = "GAME_TYPE_EXIT";
-        };
+        /* --- tab / enter --- */
+        combo_tab    { key-positions = <0 1>;      bindings = <&kp TAB>;      timeout-ms = <50>; layers = <BASE>; };
+        combo_ret    { key-positions = <7 8>;      bindings = <&kp RET>;      timeout-ms = <50>; layers = <BASE>; };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        Base {
-            label = "Base";
+        base_layer {
+            display-name = "Base";
             bindings = <
-            &kp Q        &kp W        &kp F          &kp P        &kp B        &kp J        &kp L       &kp U         &kp Y        &kp SEMI
-&kp ESCAPE  &hm LSHFT A  &hm LCTRL R  &hm LMETA S    &hm LALT T   &kp G        &kp M        &hm RALT N  &hm RMETA E   &hm RCTRL I  &hm RSHFT O  &kp APOS
-&kp LPAR    &kp Z        &kp X        &kp C          &kp D        &kp V        &kp K        &kp H       &kp COMMA     &kp DOT      &kp SLASH    &kp RPAR
-                                      &kp BACKSPACE  &lt 3 SPACE  &kp ENTER    &lt 6 SPACE  &lt 2 TAB   &lt 1 DELETE
+//        0            1              2             3               4              5           6              7            8             9
+          &kp W        &kp F          &kp M         &kp P           &kp B          &kp Z       &dtc           &cms         &kp J         &kp X
+// 10     11           12             13            14              15             16          17             18           19            20            21
+   &kp TAB &kp R       &kp S          &kp N         &kp T           &kp G          &kp MINUS   &kp A          &kp E        &kp I         &kp H         &kp RET
+// 22     23           24             25            26              27             28          29             30           31            32            33
+   &kp ESC &hml LALT Q &hml LCTRL C   &hml LGUI L   &hmli LSHFT D   &kp V          &kp GRAVE   &hmri RSHFT U  &hmr RGUI O  &hmr RCTRL Y  &hmr RALT K   &kp RET
+//                                    34            35              36             37          38             39
+                                      &lt NAV SPACE &mo NUM         &mo NUM        &mo SYM     &mo SYM        &lt NAV SPACE
             >;
         };
 
-        Media {
-            label = "Media";
+        nav_layer {
+            display-name = "Nav";
             bindings = <
-        &trans          &msc SCRL_DOWN  &fsh            &msc SCRL_UP     &kp C_BRI_UP       &trans  &kp C_MUTE  &kp C_VOL_UP  &kp C_VOL_UP  &trans
-&trans  &msc SCRL_LEFT  &mmv MOVE_LEFT  &mmv MOVE_UP    &mmv MOVE_RIGHT  &msc SCRL_RIGHT    &trans  &kp C_PREV  &kp C_PP      &kp C_STOP    &kp C_NEXT  &trans
-&trans  &trans          &trans          &mmv MOVE_DOWN  &trans           &kp C_BRI_DEC      &trans  &kp C_MUTE  &kp C_VOL_DN  &kp C_VOL_DN  &trans      &trans
-                                        &mkp MB2        &mkp MB1         &mkp MB3           &trans  &trans      &trans
+          &trans       &trans         &kp RA(DEL)   &kp RA(BSPC)    &trans         &trans      &kp RA(LEFT)   &kp UP       &kp RA(RIGHT) &trans
+   &trans &trans       &kp LS(TAB)    &kp DEL       &kp BSPC        &trans         &kp LG(LEFT) &kp LEFT      &kp DOWN     &kp RIGHT     &kp LG(RIGHT) &trans
+   &trans &trans       &trans         &trans        &trans          &trans         &trans      &kp PG_UP      &kp PG_DN    &trans        &trans        &trans
+                                      &trans        &kp LALT        &kp LGUI       &kp RGUI    &kp RALT       &trans
             >;
         };
 
-        Nav {
-            label = "Nav";
+        num_layer {
+            display-name = "Num";
             bindings = <
-          &trans  &kp LC(RIGHT)  &trans  &kp LS(LC(V))  &kp LC(LEFT)    &trans    &kp END   &kp PG_UP  &kp LC(C)  &trans
-&kp LBRC  &trans  &trans         &trans  &trans         &trans          &kp CAPS  &kp LEFT  &kp DOWN   &kp UP     &kp RIGHT  &kp RIGHT_BRACE
-&kp LBKT  &trans  &kp DEL        &trans  &kp PG_DN      &trans          &trans    &kp HOME  &kp LT     &kp GT     &kp LC(F)  &kp RBKT
-                                 &trans  &fsu           &trans          &trans    &trans    &trans
+          &trans       &trans         &trans        &trans          &trans         &trans      &kp N7         &kp N8       &kp N9        &trans
+   &trans &kp INT1     &kp LS(N8)     &kp LS(EQUAL) &kp MINUS       &trans         &trans      &kp N4         &kp N5       &kp N6        &trans        &trans
+   &trans &trans       &trans         &trans        &trans          &trans         &trans      &kp N1         &kp N2       &kp N3        &kp N0        &trans
+                                      &trans        &trans          &trans         &trans      &trans         &trans
             >;
         };
 
-        NumSym {
-            label = "NumSym";
+        sym_layer {
+            display-name = "Sym";
             bindings = <
-           &kp LG(N1)    &kp LG(N2)  &kp LG(N3)  &kp LG(N4)  &kp LG(N5)    &kp LG(N6)  &kp LG(N7)  &kp LG(N8)  &kp LG(N9)  &kp MINUS
-&kp EQUAL  &hm LSHFT N9  &kp N7      &kp N0      &kp N3      &kp F3        &f1s        &kp N1      &kp N2      &kp N4      &hm RSHFT N8  &kp GRAVE
-&trans     &kp F9        &kp F7      &kp F10     &kp N5      &kp F5        &kp F6      &kp N6      &f2s        &kp F4      &kp F8        &kp BSLH
-                                     &trans      &trans      &trans        &trans      &trans      &trans
+          &none        &kp LS(N2)     &kp LS(N3)    &kp LS(N4)      &kp LA(N6)     &kp LS(EQUAL) &kp LS(RBKT) &kp LS(BSLH) &none         &none
+   &trans &kp LS(N1)   &kp LS(COMMA)  &kp LS(DOT)   &kp EQUAL       &kp LS(N5)     &kp LA(LS(MINUS)) &kp LS(N9) &kp LS(N0) &kp LS(N8)    &kp LS(INT1)  &trans
+   &trans &tildelit    &kp LS(N7)     &kp LS(NON_US_BSLH) &kp LA(LS(N2)) &kp LA(N4) &kp GRAVE   &kp RBKT       &kp BSLH     &kp INT1      &kp NON_US_BSLH &trans
+                                      &trans        &trans          &trans         &trans      &trans         &trans
             >;
         };
 
-        Game {
-            label = "Game";
+        fn_layer {
+            display-name = "Fn";
             bindings = <
-             &kp TAB    &kp W  &kp F     &kp P      &kp B              &trans  &trans  &trans  &trans  &trans
-&df TAB ESC  &kp LCTRL  &kp R  &kp S     &kp T      &kp G              &trans  &trans  &trans  &trans  &trans  &trans
-&trans       &kp LSHFT  &kp X  &kp C     &kp D      &kp V              &trans  &trans  &trans  &trans  &trans  &trans
-                               &kp LALT  &kp SPACE  &lt 5 BACKSPACE    &trans  &trans  &trans
-            >;
-        };
-
-        Gameplus {
-            label = "Gameplus";
-            bindings = <
-            &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4  &kp O     &trans  &trans  &trans  &trans  &trans
-&kp ESC     &kp N         &trans        &trans        &trans        &kp M     &trans  &trans  &trans  &trans  &trans  &trans
-&game_type  &kp TAB       &trans        &trans        &trans        &kp K     &trans  &trans  &trans  &trans  &trans  &trans
-                                        &kp ESCAPE    &trans        &trans    &trans  &trans  &trans
-            >;
-        };
-
-        Accent {
-            bindings = <
-        &trans            &trans  &trans  &trans  &trans    &trans  &accs U  &accd U  &acce U  &acce O
-&trans  &hmaccs LSHIFT A  &trans  &trans  &trans  &trans    &trans  &trans   &accs E  &accs I  &hmaccd LEFT_SHIFT O  &trans
-&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &out OUT_TOG    &trans  &trans   &trans   &trans   &accs O               &trans
-                                  &trans  &trans  &trans    &trans  &trans   &trans
-            >;
-        };
-
-        GameType {
-            bindings = <
-                     &trans  &trans  &trans  &trans  &trans                   &trans  &trans  &trans  &trans  &trans
-&game_type_exit ESC  &trans  &trans  &trans  &trans  &trans                   &trans  &trans  &trans  &trans  &trans  &trans
-&trans               &trans  &trans  &trans  &trans  &trans                   &trans  &trans  &trans  &trans  &trans  &trans
-                                     &trans  &trans  &game_type_exit ENTER    &trans  &trans  &trans
+          &kp C_BRI_DN &kp C_BRI_UP   &kp C_MUTE    &kp C_VOL_DN    &kp C_VOL_UP   &out OUT_TOG &kp F7        &kp F8       &kp F9        &kp F12
+   &trans &kp C_PREV   &kp C_PP       &kp C_NEXT    &kp C_STOP      &kp PSCRN      &trans      &kp F4         &kp F5       &kp F6        &kp F11       &trans
+&bootloader &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2  &bt BT_SEL 3    &bt BT_CLR     &trans      &kp F1         &kp F2       &kp F3        &kp F10       &trans
+                                      &trans        &trans          &trans         &trans      &trans         &trans
             >;
         };
     };
