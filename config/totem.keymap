@@ -111,23 +111,7 @@
     };
 
     macros {
-        /* kanata: ~ (macro ' spc) -- dead tilde plus a space gives the glyph. */
-        tildelit: tilde_literal {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <10>;
-            bindings = <&kp SQT &kp SPACE>;
-        };
 
-        /* kanata: ` (macro S-[ spc) -- dead grave plus a space gives the glyph. */
-        gravelit: grave_literal {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <10>;
-            bindings = <&kp LS(LBKT) &kp SPACE>;
-        };
 
         /* kanata: (x c v) (macro @diaccedil 10 @diactilde) -- the "cao" chord. */
         ctil: cedilla_then_tilde {
@@ -206,7 +190,7 @@
         sym_layer {
             display-name = "Sym";
             bindings = <
-          &none  &kp LS(N2)  &kp LS(N3)  &gravelit  &tildelit  &kp LA(EQUAL)  &kp LS(RBKT)  &kp LS(BSLH)  &kp LA(LS(COMMA))  &kp LA(LS(DOT))
+          &none  &kp LS(N2)  &kp LS(N3)  &kp LA(GRAVE)  &kp LA(SQT)  &kp LA(EQUAL)  &kp LS(RBKT)  &kp LS(BSLH)  &kp LA(LS(COMMA))  &kp LA(LS(DOT))
    &trans  &kp LS(N1)  &kp LS(COMMA)  &kp LS(DOT)  &kp EQUAL  &kp LS(N5)  &kp LA(LS(MINUS))  &kp LS(N9)  &kp LS(N0)  &kp LS(N8)  &kp LS(INT1)  &trans
    &trans  &kp LS(N7)  &kp LS(NON_US_BSLH)  &kp LA(E)  &kp LS(N4)  &kp LA(N5)  &kp GRAVE  &kp RBKT  &kp BSLH  &kp INT1  &kp NON_US_BSLH  &trans
                               &trans  &trans  &trans  &trans  &trans  &trans
@@ -217,7 +201,7 @@
             display-name = "Fn";
             bindings = <
           &kp C_PREV  &kp C_NEXT  &kp C_BRI_DN  &kp C_BRI_UP  &kp PSCRN  &out OUT_TOG  &kp F7  &kp F8  &kp F9  &kp F12
-   &trans  &kp C_STOP  &kp C_MUTE  &kp C_VOL_DN  &kp C_VOL_UP  &kp C_PP  &trans  &kp F4  &kp F5  &kp F6  &kp F11  &trans
+   &kp CAPS  &kp C_STOP  &kp C_MUTE  &kp C_VOL_DN  &kp C_VOL_UP  &kp C_PP  &trans  &kp F4  &kp F5  &kp F6  &kp F11  &trans
    &bootloader  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR  &trans  &kp F1  &kp F2  &kp F3  &kp F10  &trans
                               &trans  &trans  &trans  &trans  &trans  &trans
             >;
