@@ -4,3 +4,15 @@ draw_config:
   key_w: 60
   key_h: 56
   append_colon_to_layer_header: true
+
+parse_config:
+  # Behaviours keymap-drawer has no legend for. Without these, "&bootloader"
+  # renders at full size and spills across the page.
+  raw_binding_map:
+    # Use the "h" (sub-label) slot, not "s": the shifted-label class carries a
+    # percentage font-size that svglib cannot resolve, so it renders full-size
+    # and spills across the PDF.
+    "&bootloader": {t: "BOOT"}
+    "&tdboot": {t: "RET", h: "2x BOOT"}
+    "&ctil": {t: "ç~"}
+    "&tildelit": {t: "~"}

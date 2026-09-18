@@ -10,7 +10,7 @@
 set -e
 cd "$(dirname "$0")/.."
 
-keymap parse -z config/totem.keymap \
+keymap -c tools/keymap-drawer.yaml parse -z config/totem.keymap \
   | keymap -c tools/keymap-drawer.yaml draw - \
       -j tools/physical-layout.json -l LAYOUT \
   > totem-layers.svg
