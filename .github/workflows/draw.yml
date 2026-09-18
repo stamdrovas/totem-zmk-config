@@ -1,0 +1,49 @@
+name: Draw keymap
+
+# Regenerates the layer diagram whenever the keymap changes and commits it
+# back, so totem-layers.svg/pdf in the repo root are always current. GitHub
+# renders both inline, so the layout is viewable without downloading anything.
+#
+# No loop: the paths filter below does not include the generated files, so the
+# bot's own commit cannot retrigger this workflow.
+
+on:
+  push:
+    paths:
+      - 'config/totem.keymap'
+      - 'tools/**'
+      - '.github/workflows/draw.yml'
+  workflow_dispatch:
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install keymap-drawer svglib reportlab
+
+      - run: tools/draw-layers.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keymap-diagram
+          path: |
+            totem-layers.svg
+            totem-layers.pdf
+
+      - name: Commit the diagram if it changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add totem-layers.svg totem-layers.pdf
+          git diff --staged --quiet || {
+            git commit -m "Redraw keymap diagram [skip ci]"
+            git push
+          }
