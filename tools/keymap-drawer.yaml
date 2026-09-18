@@ -1,0 +1,6 @@
+draw_config:
+  separate_combo_diagrams: true
+  combo_diagrams_scale: 3
+  key_w: 60
+  key_h: 56
+  append_colon_to_layer_header: true
