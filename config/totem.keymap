@@ -92,10 +92,18 @@
             bindings = <&kp>, <&kp>;
         };
 
-        /* Double-tap on the right half's bottom outer key -> that half's
-         * bootloader. Tap-dance forwards the event source, so unlike a combo
-         * this actually reaches the peripheral. Single tap is still Enter. */
-        tdboot: tapdance_bootloader {
+        /* Double-tap the bottom outer key of a half -> that half's bootloader.
+         * Tap-dance forwards the event source, so on the right half this
+         * reaches the peripheral; a combo cannot, because combos always run on
+         * the central. A single tap keeps each key's normal legend. */
+        tdbootl: tapdance_bootloader_left {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <300>;
+            bindings = <&kp CAPS>, <&bootloader>;
+        };
+
+        tdbootr: tapdance_bootloader_right {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <300>;
@@ -159,9 +167,6 @@
         combo_tilde  { key-positions = <25 26>;    bindings = <&kp SQT>;      timeout-ms = <50>; layers = <BASE>; };
         combo_ctil   { key-positions = <24 25 26>; bindings = <&ctil>;        timeout-ms = <50>; layers = <BASE>; };
 
-        /* --- left half into bootloader: both Caps keys together, on Fn --- */
-        combo_boot_l { key-positions = <10 22>;    bindings = <&bootloader>;  timeout-ms = <50>; layers = <FN>; };
-
         /* --- tab / enter --- */
         combo_tab    { key-positions = <0 1>;      bindings = <&kp TAB>;      timeout-ms = <50>; layers = <BASE>; };
         combo_ret    { key-positions = <7 8>;      bindings = <&kp RET>;      timeout-ms = <50>; layers = <BASE>; };
@@ -215,7 +220,7 @@
             bindings = <
           &kp C_PREV  &kp C_NEXT  &kp C_BRI_DN  &kp C_BRI_UP  &kp LG(LS(N4))  &out OUT_TOG  &kp F7  &kp F8  &kp F9  &kp F12
    &kp CAPS  &kp C_STOP  &kp C_MUTE  &kp C_VOL_DN  &kp C_VOL_UP  &kp C_PP  &trans  &kp F4  &kp F5  &kp F6  &kp F11  &trans
-   &kp CAPS       &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR  &trans  &kp F1  &kp F2  &kp F3  &kp F10  &tdboot
+   &tdbootl       &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR  &trans  &kp F1  &kp F2  &kp F3  &kp F10  &tdbootr
                               &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };

@@ -13,6 +13,7 @@ parse_config:
     # percentage font-size that svglib cannot resolve, so it renders full-size
     # and spills across the PDF.
     "&bootloader": {t: "BOOT"}
-    "&tdboot": {t: "RET", h: "2x BOOT"}
+    "&tdbootl": {t: "CAPS", h: "2x BOOT"}
+    "&tdbootr": {t: "RET", h: "2x BOOT"}
     "&ctil": {t: "ç~"}
     "&tildelit": {t: "~"}
