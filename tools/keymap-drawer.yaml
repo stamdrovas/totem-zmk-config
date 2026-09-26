@@ -17,3 +17,69 @@ parse_config:
     "&tdbootr": {t: "RET", h: "2x BOOT"}
     "&ctil": {t: "ç~"}
     "&tildelit": {t: "~"}
+
+    # kanata (defoverrides): Shift+, -> ;  and  Shift+. -> :
+    "&cms": {t: ",", h: "Sft ;"}
+    "&dtc": {t: ".", h: "Sft :"}
+
+    # ---------------------------------------------------------------------
+    # BRAZILIAN ABNT2 LEGENDS
+    #
+    # The keymap stores US-position HID codes, because that is what the host
+    # layout remaps -- so keymap-drawer's stock legends show the US character,
+    # not the one that actually arrives (LBKT prints "[", but on ABNT2 the key
+    # is the dead acute).  Every entry below was read out of the live macOS
+    # layout with UCKeyTranslate, so it is what the key really types.
+    # Re-check with `keymap --list`-style tooling if you ever switch layouts.
+    # ---------------------------------------------------------------------
+
+    # dead accents
+    "&kp LBKT":      {t: "´", h: "dead"}
+    "&kp LS(LBKT)":  {t: "`", h: "dead"}
+    "&kp SQT":       {t: "~", h: "dead"}
+    "&kp LS(SQT)":   {t: "^", h: "dead"}
+    "&kp LS(N6)":    {t: "¨", h: "dead"}
+
+    # letters-with-punctuation positions
+    "&kp SEMI":      {t: "ç"}
+    "&kp GRAVE":     {t: "'"}
+    "&kp LS(GRAVE)": {t: "\""}
+    "&kp SLASH":     {t: ";"}
+    "&kp LS(SLASH)": {t: ":"}
+    "&kp INT1":      {t: "/"}
+    "&kp LS(INT1)":  {t: "?"}
+
+    # brackets / backslash sit one key to the right of the US positions
+    "&kp RBKT":            {t: "["}
+    "&kp LS(RBKT)":        {t: "{"}
+    "&kp BSLH":            {t: "]"}
+    "&kp LS(BSLH)":        {t: "}"}
+    "&kp NON_US_BSLH":     {t: "\\"}
+    "&kp LS(NON_US_BSLH)": {t: "|"}
+
+    # shifted number row
+    "&kp LS(N1)": {t: "!"}
+    "&kp LS(N2)": {t: "@"}
+    "&kp LS(N3)": {t: "#"}
+    "&kp LS(N4)": {t: "$"}
+    "&kp LS(N5)": {t: "%"}
+    "&kp LS(N7)": {t: "&"}
+    "&kp LS(N8)": {t: "*"}
+    "&kp LS(N9)": {t: "("}
+    "&kp LS(N0)": {t: ")"}
+
+    # shifted punctuation
+    "&kp LS(COMMA)": {t: "<"}
+    "&kp LS(DOT)":   {t: ">"}
+    "&kp LS(EQUAL)": {t: "+"}
+    "&kp LS(MINUS)": {t: "_"}
+
+    # Option layer
+    "&kp LA(GRAVE)":     {t: "`"}
+    "&kp LA(SQT)":       {t: "~"}
+    "&kp LA(EQUAL)":     {t: "§"}
+    "&kp LA(E)":         {t: "€"}
+    "&kp LA(N5)":        {t: "¢"}
+    "&kp LA(LS(COMMA))": {t: "«"}
+    "&kp LA(LS(DOT))":   {t: "»"}
+    "&kp LA(LS(MINUS))": {t: "—"}
