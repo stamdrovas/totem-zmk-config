@@ -40,6 +40,11 @@
         compatible = "zmk,kscan-gpio-matrix";
         label = "KSCAN";
 
+        // Required because CONFIG_ZMK_SLEEP is on: without this the matrix is not
+        // registered as a wake source, so a keypress cannot bring the board back
+        // from deep sleep and only plugging USB does. Shared by both halves.
+        wakeup-source;
+
         diode-direction = "col2row";
 
         // row-gpios and col-gpios are set per-half in totem_left.overlay and
