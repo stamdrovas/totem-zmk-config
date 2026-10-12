@@ -7,9 +7,9 @@
 #include "totem.dtsi"
 
 &kscan0 {
-    // Stock wiring. The original controller's D1 was dead and row 1 ran on
-    // D6 via a bodge wire; that module was replaced, so row 1 is back on D1
-    // and the two halves are identical again. See git history for the bodge.
+    // Stock wiring. The original controller's D1 was dead and row 1 ran on D6
+    // via a bodge wire; that module was replaced and D1 is confirmed working,
+    // so row 1 is back on D1. See git history for the bodge.
     row-gpios
         = <&xiao_d 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
         , <&xiao_d 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>

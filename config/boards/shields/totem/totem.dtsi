@@ -48,7 +48,7 @@
         diode-direction = "col2row";
 
         // row-gpios and col-gpios are set per-half in totem_left.overlay and
-        // totem_right.overlay. They cannot live here: the left controller's
-        // D1 is dead, so its row 1 runs on D6 instead.
+        // totem_right.overlay. The rows are identical on both halves now, but
+        // the columns are mirrored, so they cannot live here.
     };
 };
