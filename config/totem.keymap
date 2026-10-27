@@ -46,13 +46,13 @@
 / {
     behaviors {
         /* Dedicated Numbers/Symbols policy; leave Space/Nav's &lt alone.
-         * Another key press or 200 ms selects the layer; short taps send
+         * Another key press or 150 ms selects the layer; short taps send
          * C-c SPC. No quick-tap or prior-idle shortcuts during typing. */
         leader_lt: leader_layer_tap {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             flavor = "hold-preferred";
-            tapping-term-ms = <200>;
+            tapping-term-ms = <150>;
             quick-tap-ms = <0>;
             require-prior-idle-ms = <0>;
             bindings = <&mo>, <&leader>;
