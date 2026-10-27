@@ -45,6 +45,19 @@
 
 / {
     behaviors {
+        /* Dedicated Numbers/Symbols policy; leave Space/Nav's &lt alone.
+         * Another key press or 200 ms selects the layer; short taps send
+         * C-c SPC. No quick-tap or prior-idle shortcuts during typing. */
+        leader_lt: leader_layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            require-prior-idle-ms = <0>;
+            bindings = <&mo>, <&leader>;
+        };
+
         /* kanata: (tap-hold-opposite-hand-release $ht <tap> <mod>
          *          (same-hand tap) (timeout hold) (require-prior-idle 0)) */
         hml: hold_mod_left {
@@ -129,7 +142,18 @@
     };
 
     macros {
-
+        /* Portable leader: release Control before ordinary Space.
+         * Outside Emacs, C-c can interrupt a shell process. */
+        leader: leader_sequence {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <10>;
+            tap-ms = <10>;
+            bindings = <&macro_press &kp LCTRL>,
+                       <&macro_tap &kp C>,
+                       <&macro_release &kp LCTRL>,
+                       <&macro_tap &kp SPACE>;
+        };
 
         /* kanata: (x c v) (macro @diaccedil 10 @diactilde) -- the "cao" chord. */
         ctil: cedilla_then_tilde {
@@ -181,7 +205,7 @@
           &kp W  &kp F  &kp M  &kp P  &kp B  &kp Z  &dtc  &cms  &kp J  &kp X
    &kp TAB  &kp R  &kp S  &kp N  &kp T  &kp G  &kp MINUS  &kp A  &kp E  &kp I  &kp H  &kp RET
    &kp ESC  &hml LALT Q  &hml LCTRL C  &hml LGUI L  &hmli LSHFT D  &kp V  &kp GRAVE  &hmri RSHFT U  &hmr RGUI O  &hmr RCTRL Y  &hmr RALT K  &kp RET
-                              &kp LC(LA(LGUI))  &lt NAV SPACE  &mo NUM  &mo SYM  &lt NAV SPACE  &kp LC(LA(LGUI))
+                              &kp LC(LA(LGUI))  &lt NAV SPACE  &leader_lt NUM 0  &leader_lt SYM 0  &lt NAV SPACE  &kp LC(LA(LGUI))
             >;
         };
 

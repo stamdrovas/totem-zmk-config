@@ -15,6 +15,7 @@ parse_config:
     "&bootloader": {t: "BOOT"}
     "&tdbootl": {t: "CAPS", h: "2x BOOT"}
     "&tdbootr": {t: "RET", h: "2x BOOT"}
+    "&leader": {t: "C-c SPC"}
     "&ctil": {t: "ç~"}
     "&tildelit": {t: "~"}
 
