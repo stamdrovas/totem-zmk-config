@@ -1,19 +1,20 @@
 name: Draw keymap
 
-# Regenerates the layer diagram whenever the keymap changes and commits it
-# back, so totem-layers.svg/pdf in the repo root are always current. GitHub
-# renders both inline, so the layout is viewable without downloading anything.
-#
-# No loop: the paths filter below does not include the generated files, so the
-# bot's own commit cannot retrigger this workflow.
-
+# Guest-only changes never run the normal PDF converter. Missing history retains
+# normal artifacts; an explicit manual normal redraw is available below.
 on:
   push:
     paths:
       - 'config/totem.keymap'
+      - 'config/info.json'
       - 'tools/**'
       - '.github/workflows/draw.yml'
   workflow_dispatch:
+    inputs:
+      redraw_normal:
+        description: 'Explicitly regenerate the normal SVG/PDF'
+        type: boolean
+        default: false
 
 jobs:
   draw:
@@ -29,21 +30,46 @@ jobs:
 
       - run: pip install keymap-drawer svglib reportlab
 
-      - run: tools/draw-layers.sh
+      - name: Compare canonical normal inputs
+        id: normal
+        env:
+          BEFORE: ${{ github.event.before }}
+          MANUAL_NORMAL: ${{ inputs.redraw_normal }}
+        run: |
+          if [ "$MANUAL_NORMAL" = true ]; then
+            echo 'redraw=true' >> "$GITHUB_OUTPUT"
+          else
+            if [ -n "$BEFORE" ]; then
+              git fetch --no-tags origin "$BEFORE" || echo 'Before fetch failed; projection guard will retain normal artifacts.'
+            fi
+            echo "redraw=$(python3 tools/prepare-diagram.py guard --before "$BEFORE")" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Redraw changed normal projection
+        if: steps.normal.outputs.redraw == 'true'
+        run: tools/draw-layers.sh
+
+      - name: Draw guest views
+        run: tools/draw-guest-layers.sh
+
+      - name: Test projections and drawings
+        run: python3 -m unittest discover -s tools/tests
 
       - uses: actions/upload-artifact@v4
         with:
-          name: keymap-diagram
+          name: keymap-diagrams
           path: |
             totem-layers.svg
             totem-layers.pdf
+            totem-guest-layers.svg
+            totem-guest-layers.pdf
 
-      - name: Commit the diagram if it changed
+      - name: Commit diagrams if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add totem-layers.svg totem-layers.pdf
+          git add totem-layers.svg totem-layers.pdf totem-guest-layers.svg totem-guest-layers.pdf
           git diff --staged --quiet || {
-            git commit -m "Redraw keymap diagram [skip ci]"
+            git commit -m "Redraw keymap diagrams [skip ci]"
             git push
           }

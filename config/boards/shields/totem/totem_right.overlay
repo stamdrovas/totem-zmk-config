@@ -19,12 +19,13 @@
         , <&xiao_d 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
         ;
 
-    // D7 (the layer-toggle column) dropped: 5 columns, mirroring the left.
+    // Append right slider D7 after the five original typing columns.
     col-gpios
         = <&xiao_d 8 GPIO_ACTIVE_HIGH>
         , <&xiao_d 9 GPIO_ACTIVE_HIGH>
         , <&xiao_d 10 GPIO_ACTIVE_HIGH>
         , <&xiao_d 5 GPIO_ACTIVE_HIGH>
         , <&xiao_d 4 GPIO_ACTIVE_HIGH>
+        , <&xiao_d 7 GPIO_ACTIVE_HIGH>
         ;
 };

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Render every layer (and the combos) to SVG, then to PDF.
+# Render the five personal layers (and their combos) to SVG, then to PDF.
 #
 #   pip install keymap-drawer svglib reportlab
 #   tools/draw-layers.sh
@@ -10,7 +10,10 @@
 set -e
 cd "$(dirname "$0")/.."
 
-keymap -c tools/keymap-drawer.yaml parse -z config/totem.keymap \
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT HUP INT TERM
+python3 tools/prepare-diagram.py normal > "$tmp/totem.keymap"
+keymap -c tools/keymap-drawer.yaml parse -z "$tmp/totem.keymap" \
   | keymap -c tools/keymap-drawer.yaml draw - \
       -j tools/physical-layout.json -l LAYOUT \
   > totem-layers.svg
